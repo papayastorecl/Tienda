@@ -1,0 +1,31 @@
+{
+    "_instrucciones": "Edita este archivo en GitHub para cambiar promociones. Guarda y en 1-2 min se actualiza la web.",
+
+    "barra_anuncios": [
+        "💎 SKINCARE COREANO 100% ORIGINAL",
+        "🎁 REGALOS EN COMPRAS SOBRE $60.000",
+        "📱 ¿DUDAS? ESCRÍBENOS +56947326885"
+    ],
+
+    "promo_carrito": {
+        "activa": false,
+        "titulo": "PROMO DEL MES",
+        "descripcion": "Próximamente",
+        "subtitulo": "¡Prepárate para ofertas exclusivas! 🎁",
+        "codigo": "",
+        "porcentaje": 0
+    },
+
+    "badges_productos": [
+        { "tipo": "bestseller", "texto": "BEST SELLER" },
+        { "tipo": "nuevo",      "texto": "NUEVO"       },
+        { "tipo": "bestseller", "texto": "ORIGINAL"    },
+        { "tipo": "nuevo",      "texto": "EXCLUSIVO"   },
+        { "tipo": "bestseller", "texto": "TOP VENTAS"  },
+        { "tipo": "nuevo",      "texto": "PREMIUM"     },
+        { "tipo": "bestseller", "texto": "FAVORITO"    },
+        { "tipo": "nuevo",      "texto": "TENDENCIA"   }
+    ],
+
+    "precio_markup_pct": 20
+}
