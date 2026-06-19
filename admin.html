@@ -1,52 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
-<title>Papaya Admin V5</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papaya Store Admin V5</title>
 
 <style>
+
 body{
 font-family:Arial,sans-serif;
-max-width:700px;
-margin:auto;
+background:#f5f5f5;
 padding:30px;
-background:#f8f8f8;
 }
 
-.card{
+.container{
+max-width:800px;
+margin:auto;
 background:white;
-padding:20px;
-border-radius:15px;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 15px rgba(0,0,0,.1);
+}
+
+h1{
 margin-bottom:20px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+label{
+display:block;
+margin-top:15px;
+font-weight:bold;
 }
 
 input{
 width:100%;
 padding:10px;
 margin-top:5px;
-margin-bottom:15px;
+font-size:16px;
 }
 
 button{
+margin-top:20px;
+padding:12px 25px;
+border:none;
 background:#ff7f6b;
 color:white;
-border:none;
-padding:12px 20px;
+font-size:16px;
 border-radius:8px;
 cursor:pointer;
 }
+
+button:hover{
+background:#ff6b57;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h1>Papaya Store Admin V5</h1>
+<div class="container">
 
-<div class="card">
+<h1>Papaya Store Admin V5</h1>
 
 <h2>Configuración</h2>
 
@@ -77,18 +94,16 @@ Guardar Configuración
 
 </div>
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-const supabase =
-window.supabase.createClient(
-'https://cfhjywllsnsurulywoyc.supabase.co',
-'sb_publishable_zJzWm_HJp5ykplTBnH0oiA_dqJbK9T1'
-);
+<script src="js/supabase-config.js"></script>
+
+<script>
 
 async function cargar(){
 
 const {data,error} =
-await supabase
+await supabaseClient
 .from('configuracion')
 .select('*')
 .eq('id',1)
@@ -112,7 +127,7 @@ document.getElementById('usd_ars').value=data.usd_ars;
 async function guardar(){
 
 const {error} =
-await supabase
+await supabaseClient
 .from('configuracion')
 .update({
 
@@ -134,8 +149,8 @@ usd_ars:Number(document.getElementById('usd_ars').value)
 .eq('id',1);
 
 if(error){
-alert('Error');
 console.error(error);
+alert('Error al guardar');
 return;
 }
 
