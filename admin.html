@@ -1,10 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Papaya Admin V5</title>
 
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Papaya Admin</title></head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+max-width:700px;
+margin:auto;
+padding:30px;
+background:#f8f8f8;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+}
+
+button{
+background:#ff7f6b;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+cursor:pointer;
+}
+</style>
+
+</head>
+
 <body>
-<h1>Papaya Store Admin V4</h1>
-<p>Panel inicial para futuras integraciones con Supabase.</p>
-<label>Sunscreen % <input value="15"></label><br>
-<label>Serum % <input value="18"></label><br>
-<label>Cream % <input value="20"></label><br>
-<p>WhatsApp: +56947326885</p>
-</body></html>
+
+<h1>Papaya Store Admin V5</h1>
+
+<div class="card">
+
+<h2>Configuración</h2>
+
+<label>Sunscreen %</label>
+<input id="sunscreen_pct">
+
+<label>Serum %</label>
+<input id="serum_pct">
+
+<label>Toner %</label>
+<input id="toner_pct">
+
+<label>Cream %</label>
+<input id="cream_pct">
+
+<label>Premium %</label>
+<input id="premium_pct">
+
+<label>USD → CLP</label>
+<input id="usd_clp">
+
+<label>USD → ARS</label>
+<input id="usd_ars">
+
+<button onclick="guardar()">
+Guardar Configuración
+</button>
+
+</div>
+
+<script>
+
+const supabase =
+window.supabase.createClient(
+'https://cfhjywllsnsurulywoyc.supabase.co',
+'sb_publishable_zJzWm_HJp5ykplTBnH0oiA_dqJbK9T1'
+);
+
+async function cargar(){
+
+const {data,error} =
+await supabase
+.from('configuracion')
+.select('*')
+.eq('id',1)
+.single();
+
+if(error){
+console.error(error);
+return;
+}
+
+document.getElementById('sunscreen_pct').value=data.sunscreen_pct;
+document.getElementById('serum_pct').value=data.serum_pct;
+document.getElementById('toner_pct').value=data.toner_pct;
+document.getElementById('cream_pct').value=data.cream_pct;
+document.getElementById('premium_pct').value=data.premium_pct;
+document.getElementById('usd_clp').value=data.usd_clp;
+document.getElementById('usd_ars').value=data.usd_ars;
+
+}
+
+async function guardar(){
+
+const {error} =
+await supabase
+.from('configuracion')
+.update({
+
+sunscreen_pct:Number(document.getElementById('sunscreen_pct').value),
+
+serum_pct:Number(document.getElementById('serum_pct').value),
+
+toner_pct:Number(document.getElementById('toner_pct').value),
+
+cream_pct:Number(document.getElementById('cream_pct').value),
+
+premium_pct:Number(document.getElementById('premium_pct').value),
+
+usd_clp:Number(document.getElementById('usd_clp').value),
+
+usd_ars:Number(document.getElementById('usd_ars').value)
+
+})
+.eq('id',1);
+
+if(error){
+alert('Error');
+console.error(error);
+return;
+}
+
+alert('Configuración guardada');
+
+}
+
+cargar();
+
+</script>
+
+</body>
+</html>
