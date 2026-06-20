@@ -6,24 +6,8 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-console.log("✅ Supabase conectado");
-
-async function testSupabase() {
-
-    const { data, error } =
-    await supabaseClient
-        .from('configuracion')
-        .select('*');
-
-    console.log("CONFIG:", data);
-
-    if (error) {
-        console.error("ERROR:", error);
-    }
-}
-
-testSupabase();
+console.log('✅ Supabase conectado');
