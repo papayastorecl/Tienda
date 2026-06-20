@@ -24,15 +24,45 @@ const BADGES_DEFAULT = [
 function getBadgeList() { return BADGES_CONFIG || BADGES_DEFAULT; }
 
 /* ── CARGA INICIAL ── */
-cargarPromociones().finally(() => fetch('productos_tienda_es.json')
-  .then(r => r.json())
-  .then(data => {
-    // Aplica el markup a todos los productos al cargar
-    data.forEach(p => { p.precio_usd = getPrecioUSD(p); });
-    productos = data;
-    render(data);
-    renderBrands(data);
-  }));
+async function iniciarTienda() {
+
+  await cargarConfiguracion();
+
+  await cargarPromociones();
+
+  const response =
+    await fetch('productos_tienda_es.json');
+
+  const data =
+    await response.json();
+
+  data.forEach(p => {
+
+    p.precio_usd = getPrecioUSD(p);
+
+    p.precio_clp =
+      Math.round(
+        p.precio_usd *
+        CONFIG.usd_clp
+      );
+
+    p.precio_ars =
+      Math.round(
+        p.precio_usd *
+        CONFIG.usd_ars
+      );
+
+  });
+
+  productos = data;
+
+  render(productos);
+
+  renderBrands(productos);
+
+}
+
+iniciarTienda();
 
 /* ── RENDER PRODUCTOS ── */
 function render(lista) {
