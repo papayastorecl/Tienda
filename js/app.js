@@ -238,15 +238,28 @@ function cargarPromociones() {
 
 /* ── FORMATO PRECIO ── */
 function formatPrecio(p) {
-  if (moneda === 'usd') return `USD $${(p.precio_usd || 0).toFixed(2)}`;
-  if (moneda === 'ars') return `ARS $${(p.precio_ars || 0).toLocaleString('es-AR')}`;
-  return `$${(p.precio_clp || 0).toLocaleString('es-CL')} CLP`;
-}
 
-function valorMoneda(p) {
-  if (moneda === 'usd') return p.precio_usd || 0;
-  if (moneda === 'ars') return p.precio_ars || 0;
-  return p.precio_clp || 0;
+  const precioUSD = getPrecioUSD(p);
+
+  const precioCLP =
+    Math.round(
+      precioUSD *
+      CONFIG.usd_clp
+    );
+
+  const precioARS =
+    Math.round(
+      precioUSD *
+      CONFIG.usd_ars
+    );
+
+  if (moneda === 'usd')
+    return `USD $${precioUSD.toFixed(2)}`;
+
+  if (moneda === 'ars')
+    return `ARS $${precioARS.toLocaleString('es-AR')}`;
+
+  return `$${precioCLP.toLocaleString('es-CL')} CLP`;
 }
 
 /* ── WISHLIST (solo visual) ── */
