@@ -92,13 +92,71 @@ function filtrarMarca(marca) {
   render(productos.filter(p => p.nombre.toLowerCase().includes(marca.toLowerCase())));
   document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
 }
-
-let MARKUP_PCT = 35; // fallback si no carga promociones.json
+let MARKUP_PCT = 35;
 let BADGES_CONFIG = null;
 
+let CONFIG = {
+  sunscreen_pct: 25,
+  serum_pct: 18,
+  toner_pct: 18,
+  cream_pct: 20,
+  premium_pct: 25,
+  usd_clp: 950,
+  usd_ars: 1350
+};
+
+async function cargarConfiguracion() {
+
+  const { data, error } =
+  await supabaseClient
+    .from('configuracion')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  CONFIG = data;
+
+  console.log("CONFIG SUPABASE", CONFIG);
+}
+
 function getPrecioUSD(p) {
-  const base = p.precio_usd_base || p.precio_usd || 0;
-  return Math.round(base * (1 + MARKUP_PCT / 100) * 100) / 100;
+
+  const base =
+    p.precio_usd_base ||
+    p.precio_usd ||
+    0;
+
+  let margen =
+    CONFIG.premium_pct;
+
+  switch ((p.categoria || '').toLowerCase()) {
+
+    case 'sunscreen':
+      margen = CONFIG.sunscreen_pct;
+      break;
+
+    case 'serum':
+      margen = CONFIG.serum_pct;
+      break;
+
+    case 'toner':
+      margen = CONFIG.toner_pct;
+      break;
+
+    case 'cream':
+      margen = CONFIG.cream_pct;
+      break;
+  }
+
+  return Number(
+    (base * (1 + margen / 100))
+      .toFixed(2)
+  );
 }
 
 /* ── CARGA PROMOCIONES ── */
