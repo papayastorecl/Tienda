@@ -160,6 +160,27 @@ alert('Configuración guardada');
 
 cargar();
 
+  <h2>Promoción</h2>
+
+<label>Título</label>
+<input id="promo_titulo">
+
+<label>Código</label>
+<input id="promo_codigo">
+
+<label>Descuento %</label>
+<input id="promo_porcentaje">
+
+<label>Activa</label>
+<select id="promo_activa">
+  <option value="true">Sí</option>
+  <option value="false">No</option>
+</select>
+
+<button onclick="guardarPromocion()">
+Guardar Promoción
+</button>
+
 </script>
 
 </body>
