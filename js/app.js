@@ -1,4 +1,3 @@
-
 /* ─────────────────────────────────────────
    Papaya Store Premium — app.js
 ───────────────────────────────────────── */
@@ -183,20 +182,60 @@ function getPrecioUSD(p) {
       break;
   }
 
-  return Number(
-    (base * (1 + margen / 100))
-      .toFixed(2)
-  );
+  let precio = base * (1 + margen / 100);
+
+  // Descuento de la promoción activa (tabla "promociones" en Supabase)
+  if (promoAplicaA(p)) {
+    precio = precio * (1 - PROMO_ACTIVA.descuento / 100);
+  }
+
+  return Number(precio.toFixed(2));
+}
+
+/* ── PROMOCIÓN ACTIVA (Supabase) ── */
+let PROMO_ACTIVA = null; // { id, titulo, categoria, descuento, activa }
+
+async function cargarPromocionSupabase() {
+
+  const { data, error } =
+    await supabaseClient
+      .from('promociones')
+      .select('*')
+      .eq('activa', true);
+
+  if (error) {
+    console.error(error);
+    PROMO_ACTIVA = null;
+    return;
+  }
+
+  // Si hay varias promociones activas, se usa la primera
+  PROMO_ACTIVA = (data && data.length > 0) ? data[0] : null;
+
+  console.log('PROMO_ACTIVA SUPABASE', PROMO_ACTIVA);
+}
+
+function promoAplicaA(p) {
+  if (!PROMO_ACTIVA || !PROMO_ACTIVA.descuento) return false;
+  const catPromo = (PROMO_ACTIVA.categoria || '').toLowerCase().trim();
+  const catProd  = (p.categoria || '').toLowerCase().trim();
+  // Categoría vacía o "todos" = aplica a toda la tienda
+  return !catPromo || catPromo === 'todos' || catPromo === catProd;
 }
 
 /* ── CARGA PROMOCIONES ── */
-function cargarPromociones() {
+async function cargarPromociones() {
+
+  // 1. Promoción que aplica el descuento real (tabla "promociones" en Supabase)
+  await cargarPromocionSupabase();
+
+  // 2. Contenido visual complementario (barra de anuncios, badges) — sigue en promociones.json
   return fetch('promociones.json')
     .then(r => r.json())
     .then(promo => {
 
-      // 1. Markup de precio
-      if (typeof promo.precio_markup_pct === 'number') {
+      // Markup de precio (solo se usa si no hay promoción activa en Supabase)
+      if (!PROMO_ACTIVA && typeof promo.precio_markup_pct === 'number') {
         MARKUP_PCT = promo.precio_markup_pct;
       }
 
@@ -217,19 +256,30 @@ function cargarPromociones() {
         }));
       }
 
-      // 4. Promo del carrito
-      const p = promo.promo_carrito;
+      // 4. Caja de promo del carrito — prioridad a la promoción activa de Supabase
       const box = document.querySelector('.promo-box');
-      if (box && p) {
-        if (p.activa && p.codigo) {
+      if (box) {
+        if (PROMO_ACTIVA) {
+          const ambito = PROMO_ACTIVA.categoria
+            ? `en ${PROMO_ACTIVA.categoria}`
+            : 'en toda la tienda';
           box.innerHTML = `
-            <div class="promo-tag">${p.titulo}</div>
-            <p><strong>${p.porcentaje}% OFF</strong><br>${p.descripcion}</p>
-            <div class="promo-code">${p.codigo}</div>`;
+            <div class="promo-tag">${PROMO_ACTIVA.titulo || 'PROMOCIÓN ACTIVA'}</div>
+            <p><strong>${PROMO_ACTIVA.descuento}% OFF</strong><br>${ambito}</p>`;
         } else {
-          box.innerHTML = `
-            <div class="promo-tag">${p.titulo}</div>
-            <p><strong>${p.descripcion}</strong><br>${p.subtitulo}</p>`;
+          const p = promo.promo_carrito;
+          if (p) {
+            if (p.activa && p.codigo) {
+              box.innerHTML = `
+                <div class="promo-tag">${p.titulo}</div>
+                <p><strong>${p.porcentaje}% OFF</strong><br>${p.descripcion}</p>
+                <div class="promo-code">${p.codigo}</div>`;
+            } else {
+              box.innerHTML = `
+                <div class="promo-tag">${p.titulo}</div>
+                <p><strong>${p.descripcion}</strong><br>${p.subtitulo}</p>`;
+            }
+          }
         }
       }
     })
