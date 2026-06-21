@@ -29,11 +29,15 @@ async function iniciarTienda() {
 
   await cargarPromociones();
 
-  const response =
-    await fetch('productos_tienda_es.json');
+  const { data, error } =
+    await supabaseClient
+      .from('productos')
+      .select('*');
 
-  const data =
-    await response.json();
+  if (error) {
+    console.error('Error cargando productos desde Supabase', error);
+    return;
+  }
 
   data.forEach(p => {
 
