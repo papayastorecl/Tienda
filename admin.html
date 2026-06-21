@@ -1,3 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papaya Store Admin V5</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:30px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 15px rgba(0,0,0,.1);
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+}
+
+button{
+padding:12px 20px;
+background:#ff7f6b;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Papaya Store Admin V5</h1>
+
+<label>Sunscreen %</label> <input id="sunscreen_pct">
+
+<label>Serum %</label> <input id="serum_pct">
+
+<label>Toner %</label> <input id="toner_pct">
+
+<label>Cream %</label> <input id="cream_pct">
+
+<label>Premium %</label> <input id="premium_pct">
+
+<label>USD → CLP</label> <input id="usd_clp">
+
+<label>USD → ARS</label> <input id="usd_ars">
+
+<button onclick="guardar()">
+Guardar Configuración
+</button>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/supabase-config.js"></script>
+
 <script>
 
 async function cargar(){
@@ -32,25 +106,18 @@ await supabaseClient
 .update({
 
 sunscreen_pct:Number(document.getElementById('sunscreen_pct').value),
-
 serum_pct:Number(document.getElementById('serum_pct').value),
-
 toner_pct:Number(document.getElementById('toner_pct').value),
-
 cream_pct:Number(document.getElementById('cream_pct').value),
-
 premium_pct:Number(document.getElementById('premium_pct').value),
-
 usd_clp:Number(document.getElementById('usd_clp').value),
-
 usd_ars:Number(document.getElementById('usd_ars').value)
 
 })
 .eq('id',1);
 
 if(error){
-console.error(error);
-alert('Error al guardar');
+alert('Error');
 return;
 }
 
@@ -58,67 +125,9 @@ alert('Configuración guardada');
 
 }
 
-async function cargarPromocion(){
-
-const {data,error} =
-await supabaseClient
-.from('promociones')
-.select('*')
-.eq('id',1)
-.single();
-
-if(error){
-console.error(error);
-return;
-}
-
-document.getElementById('promo_titulo').value =
-data.titulo || '';
-
-document.getElementById('promo_codigo').value =
-data.codigo || '';
-
-document.getElementById('promo_porcentaje').value =
-data.porcentaje || 0;
-
-document.getElementById('promo_activa').value =
-data.activa ? 'true' : 'false';
-
-}
-
-async function guardarPromocion(){
-
-const {error} =
-await supabaseClient
-.from('promociones')
-.update({
-
-titulo:
-document.getElementById('promo_titulo').value,
-
-codigo:
-document.getElementById('promo_codigo').value,
-
-porcentaje:
-Number(document.getElementById('promo_porcentaje').value),
-
-activa:
-document.getElementById('promo_activa').value === 'true'
-
-})
-.eq('id',1);
-
-if(error){
-console.error(error);
-alert('Error al guardar promoción');
-return;
-}
-
-alert('Promoción guardada');
-
-}
-
 cargar();
-cargarPromocion();
 
 </script>
+
+</body>
+</html>
