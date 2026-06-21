@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
@@ -8,6 +7,7 @@
 <title>Papaya Store Admin V5</title>
 
 <style>
+
 body{
 font-family:Arial,sans-serif;
 background:#f5f5f5;
@@ -23,11 +23,16 @@ border-radius:12px;
 box-shadow:0 0 15px rgba(0,0,0,.1);
 }
 
+h1,h2{
+margin-top:20px;
+}
+
 input,select{
 width:100%;
 padding:10px;
 margin-top:5px;
 margin-bottom:15px;
+box-sizing:border-box;
 }
 
 button{
@@ -37,7 +42,17 @@ color:white;
 border:none;
 border-radius:8px;
 cursor:pointer;
+margin-bottom:20px;
 }
+
+button:hover{
+background:#ff6b57;
+}
+
+hr{
+margin:30px 0;
+}
+
 </style>
 
 </head>
@@ -48,28 +63,59 @@ cursor:pointer;
 
 <h1>Papaya Store Admin V5</h1>
 
-<label>Sunscreen %</label> <input id="sunscreen_pct">
+<h2>Configuración</h2>
 
-<label>Serum %</label> <input id="serum_pct">
+<label>Sunscreen %</label>
+<input id="sunscreen_pct">
 
-<label>Toner %</label> <input id="toner_pct">
+<label>Serum %</label>
+<input id="serum_pct">
 
-<label>Cream %</label> <input id="cream_pct">
+<label>Toner %</label>
+<input id="toner_pct">
 
-<label>Premium %</label> <input id="premium_pct">
+<label>Cream %</label>
+<input id="cream_pct">
 
-<label>USD → CLP</label> <input id="usd_clp">
+<label>Premium %</label>
+<input id="premium_pct">
 
-<label>USD → ARS</label> <input id="usd_ars">
+<label>USD → CLP</label>
+<input id="usd_clp">
+
+<label>USD → ARS</label>
+<input id="usd_ars">
 
 <button onclick="guardar()">
 Guardar Configuración
 </button>
 
+<hr>
+
+<h2>Promoción Activa</h2>
+
+<label>Título</label>
+<input id="promo_titulo">
+
+<label>Categoría</label>
+<input id="promo_categoria">
+
+<label>Descuento %</label>
+<input id="promo_descuento">
+
+<label>Activa</label>
+<select id="promo_activa">
+<option value="true">Sí</option>
+<option value="false">No</option>
+</select>
+
+<button onclick="guardarPromocion()">
+Guardar Promoción
+</button>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="js/supabase-config.js"></script>
 
 <script>
@@ -117,7 +163,8 @@ usd_ars:Number(document.getElementById('usd_ars').value)
 .eq('id',1);
 
 if(error){
-alert('Error');
+console.error(error);
+alert('Error al guardar');
 return;
 }
 
@@ -125,7 +172,68 @@ alert('Configuración guardada');
 
 }
 
+async function cargarPromocion(){
+
+const {data,error} =
+await supabaseClient
+.from('promociones')
+.select('*')
+.eq('id',1)
+.single();
+
+if(error){
+console.error(error);
+return;
+}
+
+document.getElementById('promo_titulo').value =
+data.titulo || '';
+
+document.getElementById('promo_categoria').value =
+data.categoria || '';
+
+document.getElementById('promo_descuento').value =
+data.descuento || 0;
+
+document.getElementById('promo_activa').value =
+data.activa ? 'true' : 'false';
+
+}
+
+async function guardarPromocion(){
+
+const {error} =
+await supabaseClient
+.from('promociones')
+.update({
+
+titulo:
+document.getElementById('promo_titulo').value,
+
+categoria:
+document.getElementById('promo_categoria').value,
+
+descuento:
+Number(document.getElementById('promo_descuento').value),
+
+activa:
+document.getElementById('promo_activa').value === 'true'
+
+})
+.eq('id',1);
+
+if(error){
+console.error(error);
+alert('Error al guardar promoción');
+return;
+}
+
+alert('Promoción guardada');
+
+}
+
 cargar();
+cargarPromocion();
 
 </script>
 
