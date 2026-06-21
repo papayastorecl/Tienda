@@ -345,6 +345,13 @@ function eliminarItem(ci) {
   updateCartUI();
 }
 
+/* ── PRECIO UNITARIO SEGÚN MONEDA ACTIVA ── */
+function valorMoneda(item) {
+  if (moneda === 'usd') return item.precio_usd || 0;
+  if (moneda === 'ars') return item.precio_ars || 0;
+  return item.precio_clp || 0;
+}
+
 function updateCartUI() {
   const total = carrito.reduce((s, x) => s + valorMoneda(x) * x.qty, 0);
   const count = carrito.reduce((s, x) => s + x.qty, 0);
