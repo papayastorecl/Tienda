@@ -4,53 +4,282 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Papaya Store Admin V5</title>
+<title>Papaya Store — Panel Admin</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
 
+:root{
+  --bg:#FBF7F2;
+  --surface:#FFFFFF;
+  --ink:#2B2620;
+  --ink-soft:#7A7263;
+  --border:#E8E1D6;
+  --papaya:#FF7A59;
+  --papaya-deep:#D9492B;
+  --papaya-deep-hover:#C23D22;
+  --leaf:#1F4D3D;
+  --leaf-soft:#E4EEE9;
+  --danger:#B3432F;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(43,38,32,.04), 0 12px 28px -14px rgba(43,38,32,.18);
+}
+
+*{ box-sizing:border-box; }
+
 body{
-font-family:Arial,sans-serif;
-background:#f5f5f5;
-padding:30px;
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 
-.container{
-max-width:800px;
-margin:auto;
-background:#fff;
-padding:25px;
-border-radius:12px;
-box-shadow:0 0 15px rgba(0,0,0,.1);
+.page{
+  max-width:760px;
+  margin:0 auto;
+  padding:36px 20px 90px;
 }
 
-h1,h2{
-margin-top:20px;
+.topbar{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom:32px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+  gap:6px;
 }
 
-input,select{
-width:100%;
-padding:10px;
-margin-top:5px;
-margin-bottom:15px;
-box-sizing:border-box;
+.wordmark{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:21px;
+  color:var(--leaf);
+  letter-spacing:-.01em;
 }
 
-button{
-padding:12px 20px;
-background:#ff7f6b;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-bottom:20px;
+.topbar-label{
+  font-size:13px;
+  color:var(--ink-soft);
 }
 
-button:hover{
-background:#ff6b57;
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
 }
 
-hr{
-margin:30px 0;
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:32px;
+  box-shadow:var(--shadow);
+}
+
+.eyebrow{
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--leaf);
+  margin:0 0 8px;
+}
+
+.card h1{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:25px;
+  margin:0 0 10px;
+  color:var(--ink);
+  letter-spacing:-.01em;
+}
+
+.lede{
+  font-size:14.5px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin:0 0 28px;
+  max-width:54ch;
+}
+
+.field-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.field-grid.two{
+  grid-template-columns:repeat(2,1fr);
+  margin-top:20px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field label{
+  font-size:13px;
+  font-weight:500;
+  color:var(--ink);
+}
+
+.field input,
+.field select{
+  font-size:14px;
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--ink);
+  width:100%;
+  transition:border-color .15s, box-shadow .15s, background-color .15s;
+}
+
+.field input{
+  font-family:'JetBrains Mono', ui-monospace, monospace;
+}
+
+.field select{
+  font-family:'Inter',sans-serif;
+  appearance:none;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7263' fill='none' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  padding-right:34px;
+  cursor:pointer;
+}
+
+.field input:focus,
+.field select:focus{
+  outline:none;
+  border-color:var(--papaya-deep);
+  box-shadow:0 0 0 3px rgba(217,73,43,.14);
+  background:var(--surface);
+}
+
+.input-suffix,
+.input-prefix{
+  position:relative;
+}
+.input-suffix input{ padding-right:30px; }
+.input-prefix input{ padding-left:24px; }
+.input-suffix span,
+.input-prefix span{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  color:var(--ink-soft);
+  pointer-events:none;
+}
+.input-suffix span{ right:12px; }
+.input-prefix span{ left:12px; }
+
+.help{
+  font-size:12.5px;
+  color:var(--ink-soft);
+  margin:10px 0 0;
+  line-height:1.5;
+}
+
+.btn-primary{
+  appearance:none;
+  border:none;
+  background:var(--papaya-deep);
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  padding:13px 24px;
+  border-radius:10px;
+  cursor:pointer;
+  margin-top:28px;
+  transition:background-color .15s, transform .1s;
+}
+.btn-primary:hover{ background:var(--papaya-deep-hover); }
+.btn-primary:active{ transform:scale(.98); }
+.btn-primary:disabled{ opacity:.6; cursor:default; }
+.btn-primary:focus-visible{
+  outline:3px solid rgba(217,73,43,.35);
+  outline-offset:2px;
+}
+
+.preview-label{
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+}
+
+.promo-preview{
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  background:var(--leaf);
+  color:#fff;
+  padding:14px 18px;
+  border-radius:10px;
+  margin-bottom:28px;
+  transition:background-color .2s, opacity .2s;
+}
+.promo-preview.preview-empty{
+  background:var(--bg);
+  color:var(--ink-soft);
+  font-weight:400;
+  border:1px dashed var(--border);
+}
+.promo-preview.preview-inactive{
+  background:var(--ink-soft);
+  opacity:.75;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translate(-50%,16px);
+  background:var(--leaf);
+  color:#fff;
+  padding:13px 22px;
+  border-radius:10px;
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  box-shadow:var(--shadow);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s, transform .2s;
+  z-index:999;
+  max-width:90vw;
+  text-align:center;
+}
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+.toast-error{ background:var(--danger); }
+
+@media (max-width:600px){
+  .field-grid{ grid-template-columns:repeat(2,1fr); }
+  .field-grid.two{ grid-template-columns:1fr; }
+  .card{ padding:24px 18px; }
+  .card h1{ font-size:22px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; }
 }
 
 </style>
@@ -59,66 +288,203 @@ margin:30px 0;
 
 <body>
 
-<div class="container">
+<div class="page">
 
-<h1>Papaya Store Admin V5</h1>
+<header class="topbar">
+  <div class="wordmark">🍃 Papaya Store</div>
+  <div class="topbar-label">Panel de administración</div>
+</header>
 
-<h2>Configuración</h2>
+<main class="stack">
 
-<label>Sunscreen %</label>
-<input id="sunscreen_pct">
+  <!-- ── CONFIGURACIÓN ── -->
+  <section class="card">
 
-<label>Serum %</label>
-<input id="serum_pct">
+    <p class="eyebrow">Precios</p>
+    <h1>Configuración de márgenes</h1>
+    <p class="lede">Define cuánto se suma sobre el precio base de cada producto por categoría, y el tipo de cambio que se usa para mostrar precios en CLP y ARS.</p>
 
-<label>Toner %</label>
-<input id="toner_pct">
+    <div class="field-grid">
 
-<label>Cream %</label>
-<input id="cream_pct">
+      <div class="field">
+        <label for="sunscreen_pct">Protector solar (15%)</label>
+        <div class="input-suffix">
+          <input id="sunscreen_pct" type="number" step="0.1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
 
-<label>Premium %</label>
-<input id="premium_pct">
+      <div class="field">
+        <label for="serum_pct">Sérum (22%)</label>
+        <div class="input-suffix">
+          <input id="serum_pct" type="number" step="0.1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
 
-<label>USD → CLP</label>
-<input id="usd_clp">
+      <div class="field">
+        <label for="toner_pct">Tónico (18%)</label>
+        <div class="input-suffix">
+          <input id="toner_pct" type="number" step="0.1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
 
-<label>USD → ARS</label>
-<input id="usd_ars">
+      <div class="field">
+        <label for="cream_pct">Crema (20%)</label>
+        <div class="input-suffix">
+          <input id="cream_pct" type="number" step="0.1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
 
-<button onclick="guardar()">
-Guardar Configuración
-</button>
+      <div class="field">
+        <label for="premium_pct">Margen por defecto (25%)</label>
+        <div class="input-suffix">
+          <input id="premium_pct" type="number" step="0.1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
 
-<hr>
+    </div>
+    <p class="help">"Margen por defecto" se aplica a cualquier categoría que no calce con las de arriba.</p>
 
-<h2>Promoción Activa</h2>
+    <div class="field-grid two">
 
-<label>Título</label>
-<input id="promo_titulo">
+      <div class="field">
+        <label for="usd_clp">Dólar → peso chileno</label>
+        <div class="input-prefix">
+          <span>$</span>
+          <input id="usd_clp" type="number" step="1" inputmode="decimal">
+        </div>
+      </div>
 
-<label>Categoría</label>
-<input id="promo_categoria">
+      <div class="field">
+        <label for="usd_ars">Dólar → peso argentino</label>
+        <div class="input-prefix">
+          <span>$</span>
+          <input id="usd_ars" type="number" step="1" inputmode="decimal">
+        </div>
+      </div>
 
-<label>Descuento %</label>
-<input id="promo_descuento">
+    </div>
 
-<label>Activa</label>
-<select id="promo_activa">
-<option value="true">Sí</option>
-<option value="false">No</option>
-</select>
+    <button class="btn-primary" id="btnGuardarConfig" onclick="guardar()">
+      Guardar configuración
+    </button>
 
-<button onclick="guardarPromocion()">
-Guardar Promoción
-</button>
+  </section>
+
+  <!-- ── PROMOCIÓN ── -->
+  <section class="card">
+
+    <p class="eyebrow">Marketing</p>
+    <h1>Promoción activa</h1>
+    <p class="lede">Se aplica como descuento automático en la tienda y aparece en la barra de anuncios de la página principal.</p>
+
+    <div class="preview-label">Así se ve en la tienda</div>
+    <div class="promo-preview preview-empty" id="promoPreview">
+      Completa los campos para ver la vista previa
+    </div>
+
+    <div class="field-grid two">
+
+      <div class="field">
+        <label for="promo_titulo">Título</label>
+        <input id="promo_titulo" type="text" placeholder="Ej: Cyber Papaya">
+      </div>
+
+      <div class="field">
+        <label for="promo_categoria">Categoría</label>
+        <input id="promo_categoria" type="text" placeholder="Ej: Sunscreen">
+      </div>
+
+    </div>
+
+    <div class="field-grid two">
+
+      <div class="field">
+        <label for="promo_descuento">Descuento</label>
+        <div class="input-suffix">
+          <input id="promo_descuento" type="number" step="1" inputmode="decimal">
+          <span>%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="promo_activa">Estado</label>
+        <select id="promo_activa">
+          <option value="true">Activa</option>
+          <option value="false">Inactiva</option>
+        </select>
+      </div>
+
+    </div>
+    <p class="help">La categoría debe escribirse igual que en tus productos (ej. Sunscreen, Serum, Toner, Cream). Déjala vacía para aplicar el descuento a toda la tienda.</p>
+
+    <button class="btn-primary" id="btnGuardarPromo" onclick="guardarPromocion()">
+      Guardar promoción
+    </button>
+
+  </section>
+
+</main>
 
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 
 <script>
+
+/* ── FEEDBACK VISUAL ── */
+
+function mostrarToast(mensaje, tipo){
+  const toast = document.getElementById('toast');
+  toast.textContent = mensaje;
+  toast.className = 'toast show' + (tipo === 'error' ? ' toast-error' : '');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3200);
+}
+
+/* ── VISTA PREVIA EN VIVO DE LA PROMO ── */
+
+function actualizarVistaPrevia(){
+
+  const titulo = document.getElementById('promo_titulo').value.trim();
+  const categoria = document.getElementById('promo_categoria').value.trim();
+  const descuento = document.getElementById('promo_descuento').value;
+  const activa = document.getElementById('promo_activa').value === 'true';
+
+  const preview = document.getElementById('promoPreview');
+
+  if(!titulo && !descuento){
+    preview.textContent = 'Completa los campos para ver la vista previa';
+    preview.className = 'promo-preview preview-empty';
+    return;
+  }
+
+  const ambito = categoria ? `en ${categoria}` : 'en toda la tienda';
+  const tituloMostrado = titulo || 'PROMOCIÓN ACTIVA';
+
+  preview.textContent =
+    `🔥 ${tituloMostrado}: ${descuento || 0}% OFF ${ambito}`;
+
+  preview.className = 'promo-preview' + (activa ? '' : ' preview-inactive');
+
+}
+
+['promo_titulo','promo_categoria','promo_descuento','promo_activa'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', actualizarVistaPrevia);
+  el.addEventListener('change', actualizarVistaPrevia);
+});
+
+/* ── CONFIGURACIÓN ── */
 
 async function cargar(){
 
@@ -131,6 +497,7 @@ await supabaseClient
 
 if(error){
 console.error(error);
+mostrarToast('No se pudo cargar la configuración', 'error');
 return;
 }
 
@@ -145,6 +512,11 @@ document.getElementById('usd_ars').value=data.usd_ars;
 }
 
 async function guardar(){
+
+const btn = document.getElementById('btnGuardarConfig');
+const textoOriginal = btn.textContent;
+btn.disabled = true;
+btn.textContent = 'Guardando…';
 
 const {error} =
 await supabaseClient
@@ -162,15 +534,20 @@ usd_ars:Number(document.getElementById('usd_ars').value)
 })
 .eq('id',1);
 
+btn.disabled = false;
+btn.textContent = textoOriginal;
+
 if(error){
 console.error(error);
-alert('Error al guardar');
+mostrarToast('No se pudo guardar la configuración', 'error');
 return;
 }
 
-alert('Configuración guardada');
+mostrarToast('Configuración guardada ✓');
 
 }
+
+/* ── PROMOCIÓN ── */
 
 async function cargarPromocion(){
 
@@ -183,6 +560,7 @@ await supabaseClient
 
 if(error){
 console.error(error);
+mostrarToast('No se pudo cargar la promoción', 'error');
 return;
 }
 
@@ -198,9 +576,16 @@ data.descuento || 0;
 document.getElementById('promo_activa').value =
 data.activa ? 'true' : 'false';
 
+actualizarVistaPrevia();
+
 }
 
 async function guardarPromocion(){
+
+const btn = document.getElementById('btnGuardarPromo');
+const textoOriginal = btn.textContent;
+btn.disabled = true;
+btn.textContent = 'Guardando…';
 
 const {error} =
 await supabaseClient
@@ -222,13 +607,16 @@ document.getElementById('promo_activa').value === 'true'
 })
 .eq('id',1);
 
+btn.disabled = false;
+btn.textContent = textoOriginal;
+
 if(error){
 console.error(error);
-alert('Error al guardar promoción');
+mostrarToast('No se pudo guardar la promoción', 'error');
 return;
 }
 
-alert('Promoción guardada');
+mostrarToast('Promoción guardada ✓');
 
 }
 
