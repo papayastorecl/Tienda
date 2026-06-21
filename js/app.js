@@ -242,8 +242,21 @@ async function cargarPromociones() {
       // 2. Barra de anuncios
       if (promo.barra_anuncios && promo.barra_anuncios.length) {
         const bar = document.querySelector('.announce-items');
-        if (bar) bar.innerHTML = promo.barra_anuncios
-          .map(txt => `<span>${txt}</span>`).join('');
+        if (bar) {
+          let items = promo.barra_anuncios.map(txt => `<span>${txt}</span>`);
+
+          // Si hay una promoción activa en Supabase, se agrega primero y bien visible
+          if (PROMO_ACTIVA) {
+            const ambitoBar = PROMO_ACTIVA.categoria
+              ? `en ${PROMO_ACTIVA.categoria}`
+              : 'en toda la tienda';
+            items.unshift(
+              `<span>🔥 ${PROMO_ACTIVA.titulo || 'PROMOCIÓN ACTIVA'}: ${PROMO_ACTIVA.descuento}% OFF ${ambitoBar}</span>`
+            );
+          }
+
+          bar.innerHTML = items.join('');
+        }
       }
 
       // 3. Badges de productos
