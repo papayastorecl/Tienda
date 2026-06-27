@@ -458,12 +458,42 @@ function navTo(cat) {
 /* ── DETALLE MODAL ── */
 function verDetalle(idx) {
   const p = productos[idx];
+
+  // Normaliza campos de texto: convierte null/undefined a string vacío y elimina espacios
+  const beneficios   = (p.beneficios_es  || '').trim();
+  const modoUso      = (p.modo_uso_es    || '').trim();
+  // ingredientes puede venir como array (JSON) o como string con {#item} como separador
+  let ingredientes = '';
+  if (Array.isArray(p.ingredientes)) {
+    ingredientes = p.ingredientes.join(', ').trim();
+  } else {
+    ingredientes = (p.ingredientes || '').replace(/\{#item\}/g, '').trim();
+  }
+
   document.getElementById('detalle').innerHTML = `
     <h2>${p.nombre}</h2>
-    <img src="${p.imagen}" alt="${p.nombre}">
-    ${p.beneficios_es ? `<h3>✨ Beneficios</h3><p>${p.beneficios_es.replace(/\n/g, '<br>')}</p>` : ''}
-    ${p.modo_uso_es   ? `<h3>📋 Modo de uso</h3><p>${p.modo_uso_es.replace(/\n/g, '<br>')}</p>` : ''}
-    ${p.ingredientes  ? `<h3>🧪 Ingredientes</h3><p style="font-size:12px;line-height:1.6">${p.ingredientes.replace('{#item}','')}</p>` : ''}
+    <div style="text-align:center;margin-bottom:16px">
+      <span style="display:inline-block;background:#fff0f5;color:#e75480;
+                   border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600">
+        ${p.categoria || ''}
+      </span>
+      <span style="display:inline-block;margin-left:8px;font-weight:700;font-size:15px">
+        ${formatPrecio(p)}
+      </span>
+    </div>
+    <img src="${p.imagen}" alt="${p.nombre}" style="width:100%;border-radius:12px;margin-bottom:16px">
+    ${beneficios
+      ? `<h3 style="margin:14px 0 6px;font-size:14px;color:#e75480">✨ Beneficios</h3>
+         <p style="font-size:13px;line-height:1.7;color:#444">${beneficios.replace(/\n/g, '<br>')}</p>`
+      : ''}
+    ${modoUso
+      ? `<h3 style="margin:14px 0 6px;font-size:14px;color:#e75480">📋 Modo de uso</h3>
+         <p style="font-size:13px;line-height:1.7;color:#444">${modoUso.replace(/\n/g, '<br>')}</p>`
+      : ''}
+    ${ingredientes
+      ? `<h3 style="margin:14px 0 6px;font-size:14px;color:#e75480">🧪 Ingredientes</h3>
+         <p style="font-size:11px;line-height:1.6;color:#777">${ingredientes}</p>`
+      : ''}
     <div style="margin-top:22px">
       <button onclick="agregarCarrito(${idx});cerrarModal()"
         style="width:100%;background:var(--coral);color:#fff;border:none;padding:13px;
